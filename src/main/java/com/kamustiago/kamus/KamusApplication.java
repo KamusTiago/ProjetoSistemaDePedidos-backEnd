@@ -13,6 +13,7 @@ import com.kamustiago.kamus.domain.Cidade;
 import com.kamustiago.kamus.domain.Cliente;
 import com.kamustiago.kamus.domain.Endereco;
 import com.kamustiago.kamus.domain.Estado;
+import com.kamustiago.kamus.domain.ItemPedido;
 import com.kamustiago.kamus.domain.Pagamento;
 import com.kamustiago.kamus.domain.PagamentoComBoleto;
 import com.kamustiago.kamus.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.kamustiago.kamus.repositories.CidadeRepository;
 import com.kamustiago.kamus.repositories.ClienteRepository;
 import com.kamustiago.kamus.repositories.EnderecoRepository;
 import com.kamustiago.kamus.repositories.EstadoRepository;
+import com.kamustiago.kamus.repositories.ItemPedidoRepository;
 import com.kamustiago.kamus.repositories.PagamentoRepository;
 import com.kamustiago.kamus.repositories.PedidoRepository;
 import com.kamustiago.kamus.repositories.ProdutoRepository;
@@ -46,7 +48,11 @@ public class KamusApplication implements CommandLineRunner{
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private PedidoRepository pedidoRepository;
-	@Autowired PagamentoRepository pagamentoRepository;
+	@Autowired 
+	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
+
 	
 	public static void main(String[] args) {
 		SpringApplication.run(KamusApplication.class, args);
@@ -110,6 +116,20 @@ public class KamusApplication implements CommandLineRunner{
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
+		
 	}
 
 }
